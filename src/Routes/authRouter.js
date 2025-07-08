@@ -8,6 +8,8 @@ const jwt=require("jsonwebtoken");
 const validator=require("validator")
 const {validatingData}=require("../utils/validation");
 const bcrypt=require("bcrypt");
+const templates=require("../utils/emailTemplates");
+const { handleSendEmail } = require("../utils/sendingEmail");
 
 
 
@@ -31,10 +33,15 @@ authRouter.post("/signup",async (req,res)=>{
     
     const savedUser=await user.save();
     //  const token=await jwt.sign({_id:user._id},"Manoj@123",{expiresIn:"7d"});
-    const token=await savedUser.getJWT();// ===>if you want you can this or aboev line 
-       
+    const token=await savedUser.getJWT();// ===>if you want you can this or above line 
     res.cookie("token",token);
-    
+
+    // sending Email after signup
+    const {subject,html}= templates.signupSuccessEmail(firstName+" "+lastName);
+    handleSendEmail(email,subject,html);
+    // tmeplates is for showing different templates for signup and sending requesta nd accepting requst (from templates we are taking subject and html and passing thema s paramters to handleSend Emil funtion (dont confuse the functions in emailTemplates file return the output as object soo we ahve detuscture the subject and html from returned output))
+    // and handleSendEmail is used to caal the nodemailer funtion and send the emails  
+
     res.send(savedUser);
     }
     catch(err){

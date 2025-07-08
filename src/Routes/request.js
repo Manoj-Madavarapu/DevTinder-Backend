@@ -3,6 +3,8 @@ const requestRouter=express.Router();
 const {userAuthForToken}=require("../middlewares/anthFortokens");
 const {User}=require("../models/user");
 const {ConnectionRequest}=require("../models/connectionRequest")
+const tempaltes=require("../utils/emailTemplates");
+const { handleSendEmail } = require("../utils/sendingEmail");
 
 
 // this api is for sending the connection request
@@ -47,11 +49,23 @@ requestRouter.post("/request/:status/:userId",userAuthForToken,async (req,res)=>
         throw new Error("Connection request already exits")
       }
       // $or:[] is used for searching two conditions you have $and also in ths same way
+      const data=(await connectionRequest.save());
+      // console.log(data)
 
-      const data=await connectionRequest.save();
       res.send({message: req.user.firstName +" has "+ status + " in "+ toUser.firstName+" profile",
          data
       })
+
+      // here we are sending emails fro Connection request  
+      // we have code after sending the response because of, if we write this code before it is taking some time to get the response from backend because of sending the email before sending response to frontend to avoid this, after sending  the reposnse only we have wriiten code to sent the email
+      if(status==="interested"){
+        const toUserDetails=await User.findOne({
+          _id:toUserId
+        }).select("firstName lastName email")
+        console.log(toUserDetails)
+        const {subject,html}=tempaltes.connectionRequestEmail(toUserDetails.firstName,req.user.firstName)
+        handleSendEmail(toUserDetails.email,subject,html)
+      }
    }
    catch(err){
     res.status(400).send("Error "+err.message);

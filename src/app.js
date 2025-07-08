@@ -7,8 +7,9 @@ const {profileRouter}=require("./Routes/profile");
 const {requestRouter}=require("./Routes/request");
 const {userRouter}=require("./Routes/userRouter");
 const cors=require("cors");
+const { handleSendEmail } = require("./utils/sendingEmail");
 
-
+handleSendEmail
 app.use(cors({
     origin:"http://localhost:5173", // pass the frontend url here
     credentials:true
