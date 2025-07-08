@@ -15,7 +15,6 @@ const transporter=nodemailer.createTransport({
 const handleSendEmail=async (toEmail,subject,html)=>{
 const options={
     from:process.env.EMAIL_USER,
-    // to:"manojmadavarapu7@gmail.com",
     to:toEmail,
     subject,
     html
@@ -23,8 +22,6 @@ const options={
 try{
     const info=await transporter.sendMail(options);
     console.log("Email Sent");
-    console.log("Email"+process.env.EMAIL_USER)
-    console.log("Password"+process.env.APP_PASSWORD)
 }
 catch(error){
     console.log(error);
