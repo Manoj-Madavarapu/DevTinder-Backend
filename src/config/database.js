@@ -4,7 +4,6 @@ const mongoose=require("mongoose");
 // you can just connect in this way also but this is not the best practise, have an async function as shown below this will be the best way
 
 const connectDb=async()=>{
-    // await mongoose.connect("mongodb+srv://ManojMadavarapu:s0XJodmFliPZeBSB@manojdatabase.wfaqgfr.mongodb.net/devTinder")
       await mongoose.connect(process.env.DATABASE_URL)
 }
 // in url after .net/  a last if you wnat you can specify your database name 
