@@ -9,7 +9,7 @@ try{
         return res.status(401).send("Token not found !!!");
     }
 
-    const validateToken=await jwt.verify(token,"Manoj@123");
+    const validateToken=await jwt.verify(token,process.env.JWT_TOKEN);
     const {_id}=validateToken;
     const logedInUserData=await User.findById(_id);
     if(!logedInUserData){

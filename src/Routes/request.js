@@ -62,7 +62,7 @@ requestRouter.post("/request/:status/:userId",userAuthForToken,async (req,res)=>
         const toUserDetails=await User.findOne({
           _id:toUserId
         }).select("firstName lastName email")
-        console.log(toUserDetails)
+        // console.log(toUserDetails)
         const {subject,html}=tempaltes.connectionRequestEmail(toUserDetails.firstName,req.user.firstName)
         handleSendEmail(toUserDetails.email,subject,html)
       }

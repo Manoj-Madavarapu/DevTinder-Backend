@@ -5,8 +5,8 @@ const transporter=nodemailer.createTransport({
     port:587,
     secure:false,
     auth:{
-        user:"manojmadavarapu4997@gmail.com",
-        pass:"nbsf phpc zdgs sbeu"
+        user:process.env.EMAIL_USER,
+        pass:process.env.APP_PASSWORD
     }
 })
 // host and port are the fixed values we give for gmail
@@ -14,7 +14,7 @@ const transporter=nodemailer.createTransport({
 
 const handleSendEmail=async (toEmail,subject,html)=>{
 const options={
-    from:"manojmadavarapu4997@gmail.com",
+    from:process.env.EMAIL_USER,
     // to:"manojmadavarapu7@gmail.com",
     to:toEmail,
     subject,
@@ -23,6 +23,8 @@ const options={
 try{
     const info=await transporter.sendMail(options);
     console.log("Email Sent");
+    console.log("Email"+process.env.EMAIL_USER)
+    console.log("Password"+process.env.APP_PASSWORD)
 }
 catch(error){
     console.log(error);

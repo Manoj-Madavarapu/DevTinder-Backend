@@ -1,5 +1,6 @@
 const express=require("express");
 const connectDb=require("./config/database")
+require("dotenv").config();// this is used for hiding confidential data
 const cookieParser = require("cookie-parser");
 const app=express();
 const {authRouter}=require("./Routes/authRouter");
@@ -7,9 +8,8 @@ const {profileRouter}=require("./Routes/profile");
 const {requestRouter}=require("./Routes/request");
 const {userRouter}=require("./Routes/userRouter");
 const cors=require("cors");
-const { handleSendEmail } = require("./utils/sendingEmail");
 
-handleSendEmail
+
 app.use(cors({
     origin:"http://localhost:5173", // pass the frontend url here
     credentials:true
