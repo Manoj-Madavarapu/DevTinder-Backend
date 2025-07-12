@@ -15,7 +15,7 @@ userRouter.get("/user/request/received",userAuthForToken,async(req,res)=>{
         status:"interested"
     // }).populate("fromUserId");// ===> it will fetch all the fields of this fromUserId (means the firstname,lastname role,skills age,emialand all the details of this fromUserId by getting this all the details from user collection)
     // }).populate("fromUserId",["firstName","lastName"]);
-     }).populate("fromUserId","firstName lastName age gender skills about photoUrl role");
+     }).populate("fromUserId","firstName lastName age gender skills about photoUrl role isPremium");
     //  you can use any one in above three 
     // populate() is used to get all the data from that (ref="User")refering collection
     // if we dont use populate then we will only get the fromUserId and toUserIds if we use populate we can get the data related
@@ -36,7 +36,7 @@ userRouter.get("/user/Connection-requests/send",userAuthForToken,async(req,res)=
         const data=await ConnectionRequest.find({
             fromUserId:logedInUser._id,
             status:"interested"
-        }).populate("toUserId","firstName lastName age gender role skills createdAt updatedAt about email photoUrl");
+        }).populate("toUserId","firstName lastName age gender role skills createdAt updatedAt about email photoUrl isPremium");
 
         res.send(data);
     }
@@ -68,7 +68,7 @@ userRouter.get("/user/your-connections/accepted",userAuthForToken,async(req,res)
             {toUserId:logedInUser._id,status:"accepted"}
         ]
     })
-    .populate("fromUserId",["firstName","lastName","age","gender","about","skills","photoUrl","role"]).populate("toUserId",["firstName","lastName","age","gender","about","skills","photoUrl","role"])
+    .populate("fromUserId",["firstName","lastName","email","age","gender","about","skills","photoUrl","role","isPremium"]).populate("toUserId",["firstName","lastName","email","age","gender","about","skills","photoUrl","role","isPremium"])
     // here we have used $or:[] and two piopulates because of, if we send the request and they have acepted our requets or they send they have the request to us and we have accpeted the arequest in the case we become friends(just think....) 
 
     const data=connectionRequest.map(row=>{
@@ -101,7 +101,7 @@ userRouter.get("/users/search",userAuthForToken,async(req,res)=>{
             firstName: {$regex:q, $options:'i',$ne:logedInUser.firstName}
             // $regex is like includes() it will find all the firstName that includes our typed input value
             // 'i' = case-insensitive (options:"i" will neglect case(uppercase or lowercase))
-        }).select("firstName lastName age about skills photoUrl gender role email")
+        }).select("firstName lastName age about skills photoUrl gender role email isPremium")
         res.send(data)
 
     }
@@ -146,7 +146,7 @@ userRouter.get("/feed",userAuthForToken,async(req,res)=>{
                 {_id:{$ne:logedInUser._id}},
                 {_id:{$nin:Array.from(hideConnections)}}
             ]
-        }).select("firstName lastName age about skills photoUrl gender role").skip(skip).limit(limit);
+        }).select("firstName lastName age about skills photoUrl gender role isPremium").skip(skip).limit(limit);
         // here we are using $ne(not equal to) to not show the logedInUser profile and $nin(not in this array values) to not show the profiles which are already connected to the user
         // MongoDB’s $nin operator expects an array, not a Set. so we have to convert the Set to an array using Array.from(hideConnections)
         // select() will only give us the fields we sepcified in it 

@@ -7,8 +7,16 @@ const {authRouter}=require("./Routes/authRouter");
 const {profileRouter}=require("./Routes/profile");
 const {requestRouter}=require("./Routes/request");
 const {userRouter}=require("./Routes/userRouter");
+const { paymentRouter } = require("./Routes/paymentRouter");
 const cors=require("cors");
+require("./utils/cron");
 
+// // Add raw parser ONLY for webhook route
+// app.use("/payment/webhook", express.raw({ type: "application/json" }));
+
+// // For all other routes
+// // app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
     origin:"http://localhost:5173", // pass the frontend url here
@@ -26,7 +34,7 @@ app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/",userRouter);
-
+app.use("/",paymentRouter)
 // remember we can only one response to request, once the reponse have send then again response will not send without again getting the request from the user
 
 

@@ -62,8 +62,6 @@ const userSchema=new mongoose.Schema({
                 throw new Error("Invalid URL "+value);
             }
         },
-        // default:"https://as1.ftcdn.net/v2/jpg/07/24/59/76/1000_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg"
-        // default:"https://i.pinimg.com/736x/57/00/c0/5700c04197ee9a4372a35ef16eb78f4e.jpg"
     },
     about:{
        type:String,
@@ -81,7 +79,14 @@ const userSchema=new mongoose.Schema({
               throw new Error("Duplicate skills are not allowed.");
             }
         }
-    }
+    },
+    isPremium:{
+        type:Boolean,
+        default:false,
+    },
+    membershipType:{
+        type:String
+    },
 },{timestamps:true});
 // here above {timestamps:true} this will give you the time and date of when you have added the user and when then you are updating the user 
 

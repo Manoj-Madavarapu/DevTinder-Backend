@@ -15,9 +15,18 @@ const transporter=nodemailer.createTransport({
 const handleSendEmail=async (toEmail,subject,html)=>{
 const options={
     from:process.env.EMAIL_USER,
+    // to:"manojmadavarapu7@gmail.com",
     to:toEmail,
     subject,
-    html
+    html,
+    attachments: [
+        {
+          filename: "devTinder.png",
+          path:"public/devTinder.png",
+          cid: "devTinderImage", 
+        },
+    ],
+    // this attchments code is for giving path for the image to be displayed in the email
 }
 try{
     const info=await transporter.sendMail(options);
