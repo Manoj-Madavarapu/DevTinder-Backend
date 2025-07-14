@@ -6,7 +6,7 @@ const intializeSocket=(server)=>{
     const io=socket(server,{
         cors:{
             // origin:"http://localhost:5173",
-            origin:"https://devtinderbymanoj.vercel.app/",
+            origin:"https://devtinderbymanoj.vercel.app",
             // methods: ["GET", "POST"],
             credentials: true
         }
