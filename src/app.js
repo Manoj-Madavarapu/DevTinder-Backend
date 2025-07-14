@@ -20,6 +20,7 @@ const chatRouter = require("./Routes/chatRouter");
 
 app.use(cors({
     origin:"http://localhost:5173", // pass the frontend url here
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials:true
     // this is used to set the cookie in the browser, if we dont use this then cookie will not be set in the browser
 }));
@@ -44,7 +45,8 @@ intializeSocket(server)
 
 connectDb().then(()=>{
     console.log("Database connection is established sucessfullly"); 
-    server.listen(4000,()=>{
+    const PORT = process.env.PORT || 4000; 
+    server.listen(PORT,()=>{
         console.log("Server is running on port 4000");
     })
     // now see we are getting coonection with dtabase first and then serevr is running on port 4000 to listen to requests.

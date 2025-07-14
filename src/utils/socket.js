@@ -5,7 +5,9 @@ const intializeSocket=(server)=>{
     // here the server is the http server we created in app.js
     const io=socket(server,{
         cors:{
-            origin:"http://localhost:5173"
+            origin:"http://localhost:5173",
+            // methods: ["GET", "POST"],
+            // credentials: true
         }
         // this is used to connect with frontend
     });
