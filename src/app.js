@@ -19,10 +19,7 @@ const chatRouter = require("./Routes/chatRouter");
 // app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-    origin:[
-    "http://localhost:5173",                      // for local dev
-    "https://your-frontend.vercel.app"           // for deployed frontend (future)
-  ], // pass the frontend url here
+    origin: "http://localhost:5173",             // pass the frontend url here
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials:true
     // this is used to set the cookie in the browser, if we dont use this then cookie will not be set in the browser
