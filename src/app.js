@@ -10,9 +10,9 @@ const {userRouter}=require("./Routes/userRouter");
 const { paymentRouter } = require("./Routes/paymentRouter");
 const cors=require("cors");
 require("./utils/cron");
-
-// // Add raw parser ONLY for webhook route
-// app.use("/payment/webhook", express.raw({ type: "application/json" }));
+let http=require("http"); 
+const intializeSocket = require("./utils/socket");
+const chatRouter = require("./Routes/chatRouter");
 
 // // For all other routes
 // // app.use(express.json());
@@ -34,14 +34,17 @@ app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/",userRouter);
-app.use("/",paymentRouter)
+app.use("/",paymentRouter);
+app.use("/",chatRouter);
 // remember we can only one response to request, once the reponse have send then again response will not send without again getting the request from the user
 
-
+const server=http.createServer(app)// created an HTTP server with express(app) to attch websoket fumctinality to it
+intializeSocket(server)
+// this is used for socket.io,(in below code in the palce of app.listen relace it with server.listen soo we can add socket.io functionality)
 
 connectDb().then(()=>{
     console.log("Database connection is established sucessfullly"); 
-    app.listen(4000,()=>{
+    server.listen(4000,()=>{
         console.log("Server is running on port 4000");
     })
     // now see we are getting coonection with dtabase first and then serevr is running on port 4000 to listen to requests.
