@@ -69,7 +69,14 @@ try{
         const token=await jwt.sign({_id:user._id},"Manoj@123",{expiresIn:"7d"});
         //    const token=await user.getJWT();// ===>if you want you can this or aboev line 
        
-        res.cookie("token",token);
+        res.cookie("token",token,
+            {
+              httpOnly: true,
+              secure: true,              // important for Render (HTTPS)
+              sameSite: "None",          // important for cross-origin
+              maxAge: 24 * 60 * 60 * 1000 // 1 day
+            }
+        );
         // for expiring the cookie use {expires: new Date(Date.now())} in this way as re.cookie("token",token, {expires: new Date(Date.now())})
         res.send(user);
     }
