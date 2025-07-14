@@ -74,7 +74,7 @@ try{
               httpOnly: true,
               secure: true,              // important for Render (HTTPS)
               sameSite: "None",          // important for cross-origin
-              maxAge: 24 * 60 * 60 * 1000 // 1 day
+            //   maxAge: 24 * 60 * 60 * 1000 // 1 day
             }
         );
         // for expiring the cookie use {expires: new Date(Date.now())} in this way as re.cookie("token",token, {expires: new Date(Date.now())})
