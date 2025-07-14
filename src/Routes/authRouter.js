@@ -93,7 +93,12 @@ catch(err){
 authRouter.post("/logout",async (req,res)=>{
     // to logout we just need to expires the cookie and make the token empty
     // this cookie will juts expires at the mooment it is created
-    res.cookie("token",null,{expires:new Date(Date.now())});
+    res.cookie("token",null,{
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        expires:new Date(Date.now())
+    });
     res.send("User Logout Sucessfully!! ")
 })
 
