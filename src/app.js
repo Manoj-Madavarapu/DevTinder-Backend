@@ -9,6 +9,7 @@ const {requestRouter}=require("./Routes/request");
 const {userRouter}=require("./Routes/userRouter");
 const { paymentRouter } = require("./Routes/paymentRouter");
 const cors=require("cors");
+app.use("/payment/webhook", express.raw({ type: "application/json" }));
 require("./utils/cron");
 let http=require("http"); 
 const intializeSocket = require("./utils/socket");

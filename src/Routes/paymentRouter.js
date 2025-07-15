@@ -81,6 +81,7 @@ paymentRouter.post("/payment/webhook",async(req,res)=>{
         // update my payment status in DB
         
         const paymentDetails=req.body.payload.payment.entity
+        console.log(paymentDetails)
 //      this si used to update the status of the payment details in payment colletion 
         const payment=await Payment.findOne({orderId:paymentDetails.order_id})
         payment.status=paymentDetails.status
@@ -95,12 +96,12 @@ paymentRouter.post("/payment/webhook",async(req,res)=>{
         await user.save()
         console.log(user)
 
-        // if(req.body.event==="payment.captured"){
-        //     console.log("payment sucess")
-        // }
-        //  if(req.body.event==="payment.failed"){
-        //     console.log("payment failed")
-        // }
+        if(req.body.event==="payment.captured"){
+            console.log("payment sucess")
+        }
+         if(req.body.event==="payment.failed"){
+            console.log("payment failed")
+        }
 
         // return sucess response to razorpay
         return res.status(200).json({msg:"Webhook verified sucesfully"})
