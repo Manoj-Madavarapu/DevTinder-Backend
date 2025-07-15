@@ -199,11 +199,11 @@ paymentRouter.post("/payment/webhook", express.raw({ type: "application/json" })
 
         const data = JSON.parse(payload);
         console.log("📦 Webhook payload:", data);
-        console.log("💳 Payment details:", JSON.stringify(data.payload.payment.entity, null, 2));
+        // console.log("💳 Payment details:", JSON.stringify(data.payload.payment.entity, null, 2));
 
 
-        const paymentDetails = data.payload.payment.entity;
-        const eventType = data.event;
+        const paymentDetails = data?.payload?.payment?.entity;
+        const eventType = data?.event;
         console.log("payment deatils by write by me",paymentDetails);
         console.log("eventtype",eventType);
 
