@@ -21,8 +21,8 @@ paymentRouter.post("/payment/create",userAuthForToken,async (req,res)=>{
         // getting the membershiptype from frontend
         
         const amountPlans={
-            Pro:100,
-            VIP:200
+            Pro:1100,
+            VIP:2900
         };
         const amount=amountPlans[membershipType]
         // for dynamix values we use [] not .(see after complte code to know more)
@@ -123,61 +123,6 @@ paymentRouter.post("/payment/create",userAuthForToken,async (req,res)=>{
 //     }
 // })
 
-// paymentRouter.post("/payment/webhook", express.raw({ type: "application/json" }), async (req, res) => {
-//     console.log("📥 Received webhook");
-
-//     try {
-//         const webhookSignature = req.get("X-Razorpay-Signature");
-//         const payload = req.body.toString('utf8');
-
-//         const isWebhookValid = validateWebhookSignature(
-//             payload,
-//             webhookSignature,
-//             process.env.WEBHOOK_SECRET_KEY
-//         );
-
-//         if (!isWebhookValid) {
-//             console.log("❌ Invalid webhook signature!");
-//             return res.status(400).json({ msg: "Webhook signature is invalid" });
-//         }
-
-//         const data = JSON.parse(payload); // ✅ Parse the payload
-//         console.log("📦 Webhook payload:", data);
-
-//         const paymentDetails = data.payload.payment.entity;
-//         const eventType = data.event;
-
-//         // Update payment status
-//         const payment = await Payment.findOne({ orderId: paymentDetails.order_id });
-//         if (!payment) {
-//             console.log("⚠️ Payment not found in DB");
-//             return res.status(404).json({ msg: "Payment not found" });
-//         }
-
-//         payment.status = paymentDetails.status;
-//         await payment.save();
-
-//         // Update user
-//         const user = await User.findOne({ _id: payment.userId });
-//         if (user) {
-//             user.isPremium = true;
-//             user.membershipType = payment.notes.memebershipType;
-//             await user.save();
-//         }
-
-//         if (eventType === "payment.captured") {
-//             console.log("✅ Payment success");
-//         }
-//         if (eventType === "payment.failed") {
-//             console.log("❌ Payment failed");
-//         }
-
-//         return res.status(200).json({ msg: "Webhook verified successfully" });
-//     } catch (err) {
-//         console.log("💥 Webhook error:", err.message);
-//         res.status(400).send(err.message);
-//     }
-// });
 
 paymentRouter.post("/payment/webhook", express.raw({ type: "application/json" }), async (req, res) => {
     console.log("📥 Received webhook");
