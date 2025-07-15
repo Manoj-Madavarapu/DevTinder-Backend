@@ -75,8 +75,13 @@ paymentRouter.post("/payment/webhook",async(req,res)=>{
         )
 
         if(!isWebhookValid){
+            console.log("❌ Invalid webhook signature!");
             return res.status(400).json({msg:"Webhook signature is invalid"})
         }
+        
+        console.log("📦 Webhook payload:", req.body);
+console.log("🧾 Signature header:", webhookSignature);
+console.log("🔑 Using secret:", process.env.WEBHOOK_SECRET_KEY);
 
         // update my payment status in DB
         
