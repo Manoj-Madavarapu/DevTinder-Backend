@@ -61,61 +61,124 @@ paymentRouter.post("/payment/create",userAuthForToken,async (req,res)=>{
     }
 })
 
-// this api is related to webhook where the razorapy will inform the backend about the paymentId and details of payment whether it is sucess or failed
-paymentRouter.post("/payment/webhook",async(req,res)=>{
-    console.log("heloo webhook")
-    try{
-        const webhookSignature=req.get("X-Razorpay-Signature");
+// // this api is related to webhook where the razorapy will inform the backend about the paymentId and details of payment whether it is sucess or failed
+// paymentRouter.post("/payment/webhook", express.raw({ type: "application/json" }),async(req,res)=>{
+//     console.log("heloo webhook")
+//     try{
+//         const webhookSignature=req.get("X-Razorpay-Signature");
 
-        const isWebhookValid= validateWebhookSignature(
-            JSON.stringify(req.body),
+//         // const isWebhookValid= validateWebhookSignature(
+//         //     JSON.stringify(req.body),
+//         //     webhookSignature,
+//         //     process.env.WEBHOOK_SECRET_KEY
+//         //     // this is an secret key which you give while craetion of webhook in razporapy
+//         // )
+//         const payload = req.body.toString('utf8');
+// const isWebhookValid = validateWebhookSignature(
+//   payload,
+//   webhookSignature,
+//   process.env.WEBHOOK_SECRET_KEY
+// );
+
+//         if(!isWebhookValid){
+//             console.log("❌ Invalid webhook signature!");
+//             return res.status(400).json({msg:"Webhook signature is invalid"})
+//         }
+        
+//         console.log("📦 Webhook payload:", req.body);
+// console.log("🧾 Signature header:", webhookSignature);
+// console.log("🔑 Using secret:", process.env.WEBHOOK_SECRET_KEY);
+
+//         // update my payment status in DB
+        
+//         const paymentDetails=req.body.payload.payment.entity
+//         console.log(paymentDetails)
+// //      this si used to update the status of the payment details in payment colletion 
+//         const payment=await Payment.findOne({orderId:paymentDetails.order_id})
+//         payment.status=paymentDetails.status
+//         await payment.save();
+
+//         // updating the user as premium and his memberhipType
+//         const user=await User.findOne({
+//             _id:payment.userId
+//         })
+//         user.isPremium=true,
+//         user.membershipType=payment.notes.memebershipType
+//         await user.save()
+//         console.log(user)
+
+//         if(req.body.event==="payment.captured"){
+//             console.log("payment sucess")
+//         }
+//          if(req.body.event==="payment.failed"){
+//             console.log("payment failed")
+//         }
+
+//         // return sucess response to razorpay
+//         return res.status(200).json({msg:"Webhook verified sucesfully"})
+
+//     }
+//     catch(err){
+//       res.status(400).send(err.message)
+//     }
+// })
+
+paymentRouter.post("/payment/webhook", express.raw({ type: "application/json" }), async (req, res) => {
+    console.log("📥 Received webhook");
+
+    try {
+        const webhookSignature = req.get("X-Razorpay-Signature");
+        const payload = req.body.toString('utf8');
+
+        const isWebhookValid = validateWebhookSignature(
+            payload,
             webhookSignature,
             process.env.WEBHOOK_SECRET_KEY
-            // this is an secret key which you give while craetion of webhook in razporapy
-        )
+        );
 
-        if(!isWebhookValid){
+        if (!isWebhookValid) {
             console.log("❌ Invalid webhook signature!");
-            return res.status(400).json({msg:"Webhook signature is invalid"})
+            return res.status(400).json({ msg: "Webhook signature is invalid" });
         }
-        
-        console.log("📦 Webhook payload:", req.body);
-console.log("🧾 Signature header:", webhookSignature);
-console.log("🔑 Using secret:", process.env.WEBHOOK_SECRET_KEY);
 
-        // update my payment status in DB
-        
-        const paymentDetails=req.body.payload.payment.entity
-        console.log(paymentDetails)
-//      this si used to update the status of the payment details in payment colletion 
-        const payment=await Payment.findOne({orderId:paymentDetails.order_id})
-        payment.status=paymentDetails.status
+        const data = JSON.parse(payload); // ✅ Parse the payload
+        console.log("📦 Webhook payload:", data);
+
+        const paymentDetails = data.payload.payment.entity;
+        const eventType = data.event;
+
+        // Update payment status
+        const payment = await Payment.findOne({ orderId: paymentDetails.order_id });
+        if (!payment) {
+            console.log("⚠️ Payment not found in DB");
+            return res.status(404).json({ msg: "Payment not found" });
+        }
+
+        payment.status = paymentDetails.status;
         await payment.save();
 
-        // updating the user as premium and his memberhipType
-        const user=await User.findOne({
-            _id:payment.userId
-        })
-        user.isPremium=true,
-        user.membershipType=payment.notes.memebershipType
-        await user.save()
-        console.log(user)
-
-        if(req.body.event==="payment.captured"){
-            console.log("payment sucess")
-        }
-         if(req.body.event==="payment.failed"){
-            console.log("payment failed")
+        // Update user
+        const user = await User.findOne({ _id: payment.userId });
+        if (user) {
+            user.isPremium = true;
+            user.membershipType = payment.notes.memebershipType;
+            await user.save();
         }
 
-        // return sucess response to razorpay
-        return res.status(200).json({msg:"Webhook verified sucesfully"})
+        if (eventType === "payment.captured") {
+            console.log("✅ Payment success");
+        }
+        if (eventType === "payment.failed") {
+            console.log("❌ Payment failed");
+        }
 
+        return res.status(200).json({ msg: "Webhook verified successfully" });
+    } catch (err) {
+        console.log("💥 Webhook error:", err.message);
+        res.status(400).send(err.message);
     }
-    catch(err){
-      res.status(400).send(err.message)
-    }
-})
+});
+
 
 
 paymentRouter.get("/membership/verification",userAuthForToken,async(req,res)=>{
