@@ -34,7 +34,13 @@ authRouter.post("/signup",async (req,res)=>{
     const savedUser=await user.save();
     //  const token=await jwt.sign({_id:user._id},"Manoj@123",{expiresIn:"7d"});
     const token=await savedUser.getJWT();// ===>if you want you can this or above line 
-    res.cookie("token",token);
+    res.cookie("token",token,
+        {
+          httpOnly: true,
+          secure: true,              // important for Render (HTTPS)
+          sameSite: "None",          // important for cross-origin
+        }
+    );
 
     // sending Email after signup
     const {subject,html}= templates.signupSuccessEmail(firstName+" "+lastName);
