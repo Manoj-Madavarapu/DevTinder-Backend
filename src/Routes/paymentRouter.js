@@ -21,8 +21,8 @@ paymentRouter.post("/payment/create",userAuthForToken,async (req,res)=>{
         // getting the membershiptype from frontend
         
         const amountPlans={
-            Pro:9900,
-            VIP:19900
+            Pro:100,
+            VIP:200
         };
         const amount=amountPlans[membershipType]
         // for dynamix values we use [] not .(see after complte code to know more)
