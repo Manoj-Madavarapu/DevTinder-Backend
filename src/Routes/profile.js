@@ -21,7 +21,7 @@ catch(err){
 // api for updating the profile data
 profileRouter.patch("/profile/edit",userAuthForToken ,async (req,res)=>{
 try{
-    const allowedEditFields=["firstName","lastName","age","skills","about","gender","photoUrl","role","gender"];
+    const allowedEditFields=["firstName","lastName","age","skills","about","gender","photoUrl","role"];
     // the above is the only allowedEditFields remaining are not allowed
     const isvalid=Object.keys(req.body).every((field)=>allowedEditFields.includes(field));
     // this will first get alll te keys of req.body(means which we enter to edit) and cheks every key we enter ed is present in allowedEditFields ar enot if one field is not present also itbwill retrun false if aonly all the keys are allowed filels to edit then it will return true
