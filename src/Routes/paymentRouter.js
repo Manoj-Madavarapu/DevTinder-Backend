@@ -38,7 +38,7 @@ paymentRouter.post("/payment/create",userAuthForToken,async (req,res)=>{
             memebershipType:membershipType
         }
        });
-    //    console.log(order)
+       console.log(order)
     // by using these order details which is sent by razorapy i will crate and paymnet collection as shoen below
 
     // i have to save the payment details in the datbase
@@ -57,6 +57,7 @@ paymentRouter.post("/payment/create",userAuthForToken,async (req,res)=>{
 
     }
     catch(err){
+        console.log("Error creating order:", err.message)
         res.status(400).send("Error "+err.message)
     }
 })
